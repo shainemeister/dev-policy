@@ -1,0 +1,261 @@
+# Official-source watch list for python-dev-policy.
+#
+# Pins last verified: 2026-08-29.
+# split: language | ecosystem | os | both | meta
+# Extra indexes, unpinned pip, and named PyPI allowlists do not belong
+# in the language pack. Trust bar lives in python-ecosystem-policy.md.
+
+schema_version: 1
+verified: "2026-08-29"
+
+packs:
+  - python-language-policy.md
+  - python-ecosystem-policy.md
+  - python-os-policy.md
+  - README.md
+
+sources:
+
+  - id: python-versions
+    title: Status of Python versions
+    canonical_url: https://devguide.python.org/versions/
+    git: https://github.com/python/devguide.git
+    watch_path: versions.rst
+    packs:
+      - python-language-policy.md
+      - python-os-policy.md
+      - README.md
+    split: both
+    pin_kind: regex
+    pin: "3.14"
+    detect:
+      regex: '3\.14'
+    cadence: weekly
+    notes: "3.15 final → Language ship bar + README. Distro lag stays OS."
+
+  - id: pep-790
+    title: PEP 790 Python 3.15 release schedule
+    canonical_url: https://peps.python.org/pep-0790/
+    git: https://github.com/python/peps.git
+    watch_path: peps/pep-0790.rst
+    packs:
+      - python-language-policy.md
+      - README.md
+    split: language
+    pin_kind: regex
+    pin: "2026-10-01"
+    detect:
+      regex: '2026-10-01'
+    cadence: weekly
+    notes: "3.15.0 final date. Not the ship bar until it happens."
+
+  - id: pep-8
+    title: PEP 8
+    canonical_url: https://peps.python.org/pep-0008/
+    git: https://github.com/python/peps.git
+    watch_path: peps/pep-0008.rst
+    packs:
+      - python-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "Style Guide for Python Code"
+    detect:
+      regex: 'Style Guide for Python Code'
+    cadence: slower
+    notes: "Style convention. Ruff remains an extra."
+
+  - id: pep-668
+    title: PEP 668 externally managed environments
+    canonical_url: https://peps.python.org/pep-0668/
+    git: https://github.com/python/peps.git
+    watch_path: peps/pep-0668.rst
+    packs:
+      - python-os-policy.md
+      - python-ecosystem-policy.md
+    split: os
+    pin_kind: regex
+    pin: "EXTERNALLY-MANAGED"
+    detect:
+      regex: 'EXTERNALLY-MANAGED'
+    cadence: slower
+    notes: "venv vs distro site-packages → OS. pip must not break system packages."
+
+  - id: pep-621
+    title: PEP 621 project metadata
+    canonical_url: https://peps.python.org/pep-0621/
+    git: https://github.com/python/peps.git
+    watch_path: peps/pep-0621.rst
+    packs:
+      - python-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "pyproject.toml"
+    detect:
+      regex: 'pyproject.toml'
+    cadence: slower
+    notes: "Identity fields → Ecosystem §2."
+
+  - id: pep-751
+    title: PEP 751 pylock.toml
+    canonical_url: https://peps.python.org/pep-0751/
+    git: https://github.com/python/peps.git
+    watch_path: peps/pep-0751.rst
+    packs:
+      - python-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "pylock.toml"
+    detect:
+      regex: 'pylock\.toml'
+    cadence: slower
+    notes: "Standard lockfile. Hashes still required whichever lock shape you pick."
+
+  - id: pip-secure-installs
+    title: pip secure installs (hash-checking)
+    canonical_url: https://pip.pypa.io/en/stable/topics/secure-installs/
+    git: https://github.com/pypa/pip.git
+    watch_path: docs/html/topics/secure-installs.md
+    packs:
+      - python-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "require-hashes"
+    detect:
+      regex: 'require-hashes'
+    cadence: few-months
+    notes: "Hash-checking mode is the install gate. Unpinned pip install is not a ship path."
+
+  - id: pypi-trusted-publishers
+    title: PyPI trusted publishing
+    canonical_url: https://docs.pypi.org/trusted-publishers/
+    git: https://github.com/pypi/warehouse.git
+    watch_path: docs/trusted-publishers
+    packs:
+      - python-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "Trusted Publishing"
+    detect:
+      regex: 'Trusted Publishing'
+    cadence: weekly
+    notes: "Upload provenance extra/bar. Not a download allowlist."
+
+  - id: pypi-attestations
+    title: PyPI attestations
+    canonical_url: https://docs.pypi.org/attestations/
+    git: https://github.com/pypi/warehouse.git
+    watch_path: docs/attestations
+    packs:
+      - python-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "attestations"
+    detect:
+      regex: 'attestations'
+    cadence: weekly
+    notes: "Trust-bar extra for provenance. Lack of attestations is not an automatic reject."
+
+  - id: pip-audit
+    title: pip-audit
+    canonical_url: https://github.com/pypa/pip-audit
+    git: https://github.com/pypa/pip-audit.git
+    watch_path: README.md
+    packs:
+      - python-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "pip-audit"
+    detect:
+      regex: 'pip-audit'
+    cadence: weekly
+    notes: "PyPA advisory tool. Ecosystem §5. Analogous to cargo audit."
+
+  - id: packaging-guide
+    title: PyPA packaging guide
+    canonical_url: https://packaging.python.org/en/latest/
+    git: https://github.com/pypa/packaging.python.org.git
+    watch_path: source
+    packs:
+      - python-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "Python Packaging User Guide"
+    detect:
+      regex: 'Python Packaging User Guide'
+    cadence: few-months
+    notes: "How to write pyproject.toml. Not an OS packager."
+
+  - id: stdlib-ssl
+    title: ssl — TLS/SSL wrapper
+    canonical_url: https://docs.python.org/3/library/ssl.html
+    git: https://github.com/python/cpython.git
+    watch_path: Doc/library/ssl.rst
+    packs:
+      - python-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "create_default_context"
+    detect:
+      regex: 'create_default_context'
+    cadence: few-months
+    notes: "Language TLS contract. verify=False is a language stall."
+
+  - id: debian-python-policy
+    title: Debian Python Policy
+    canonical_url: https://www.debian.org/doc/packaging-manuals/python-policy/
+    git: https://salsa.debian.org/python-team/tools/python-policy.git
+    watch_path: null
+    packs:
+      - python-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "Python"
+    detect:
+      regex: 'Python'
+    cadence: weekly
+    notes: "dh-python / python3-* → OS Debian only."
+
+  - id: archwiki-python
+    title: ArchWiki Python
+    canonical_url: https://wiki.archlinux.org/title/Python
+    git: null
+    watch_path: null
+    packs:
+      - python-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "python-pip"
+    detect:
+      regex: 'python-pip'
+    cadence: weekly
+    notes: "extra/python vs pip → OS Arch carve-out."
+
+  - id: pep-773
+    title: PEP 773 Python Installation Manager for Windows
+    canonical_url: https://peps.python.org/pep-0773/
+    git: https://github.com/python/peps.git
+    watch_path: peps/pep-0773.rst
+    packs:
+      - python-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "Python Installation Manager"
+    detect:
+      regex: 'Python Installation Manager'
+    cadence: slower
+    notes: "Windows install path. Legacy launcher deprecation timeline."
+
+  - id: python-windows
+    title: Using Python on Windows
+    canonical_url: https://docs.python.org/3/using/windows.html
+    git: https://github.com/python/cpython.git
+    watch_path: Doc/using/windows.rst
+    packs:
+      - python-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "Python install manager"
+    detect:
+      regex: 'Python install manager'
+    cadence: few-months
+    notes: "PEP 773 install manager. Legacy py.exe launcher is deprecated since 3.14."

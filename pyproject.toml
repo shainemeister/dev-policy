@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "dev-policy-check"
+version = "1.0.0"
+description = "Official-source drift checker for dev-policy packs"
+readme = "scripts/README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+dependencies = [
+    "PyYAML>=6.0",
+]
+
+[project.scripts]
+dev-policy-check = "check_sources:main"
+
+[project.optional-dependencies]
+dev = [
+    "pylint>=3.0",
+]
+
+[tool.setuptools]
+py-modules = ["check_sources"]
+
+[tool.setuptools.package-dir]
+"" = "scripts"

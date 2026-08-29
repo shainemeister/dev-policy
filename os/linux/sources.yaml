@@ -1,0 +1,638 @@
+# Official-source watch list for linux-dev-policy.
+#
+# Pins last verified: 2026-08-25.
+# Do not scrape these manuals into the packs. On DRIFT, patch the owning
+# pack with a bite-sized rule, then bump `pin` here.
+#
+# Cadence:
+#   continuous        — announce lists, GNOME ICS, GR/vote pages
+#   weekly            — Policy, DevRef, Flathub requirements, AppCriteria
+#   gnome-point-zero  — HIG, portal, AppStream (~6 months, GNOME .0)
+#
+# split: os | application | both | meta
+# A Flathub AI change must never land in debian-application-policy.md.
+
+schema_version: 1
+verified: "2026-08-25"
+
+packs:
+  - debian-os-policy.md
+  - debian-application-policy.md
+  - gnome-os-policy.md
+  - gnome-application-policy.md
+  - README.md
+
+sources:
+
+  # ------------------------------------------------------------------
+  # Debian
+  # ------------------------------------------------------------------
+
+  - id: debian-policy
+    title: Debian Policy Manual
+    canonical_url: https://www.debian.org/doc/debian-policy/
+    git: https://salsa.debian.org/dbnpolicy/policy.git
+    watch_path: policy/index.rst
+    packs:
+      - debian-os-policy.md
+      - debian-application-policy.md
+    split: both
+    pin_kind: version
+    pin: "4.7.4.1"
+    detect:
+      regex: 'This is Debian Policy version ([0-9]+(?:\.[0-9]+)*)'
+      group: 1
+    cadence: weekly
+    notes: "Bump Policy version/date in both Debian packs §1; OS ch. 2/8–10, Application ch. 3–7/12."
+
+  - id: debian-policy-upgrading-checklist
+    title: Debian Policy upgrading checklist
+    canonical_url: https://www.debian.org/doc/debian-policy/upgrading-checklist.html
+    git: https://salsa.debian.org/dbnpolicy/policy.git
+    watch_path: policy/upgrading-checklist.rst
+    packs:
+      - debian-os-policy.md
+      - debian-application-policy.md
+    split: both
+    pin_kind: version
+    pin: "4.7.4"
+    detect:
+      regex: 'Version (4\.[0-9]+(?:\.[0-9]+)?)'
+      group: 1
+    cadence: weekly
+    notes: "New checklist heading → Debian Application Standards-Version + bite-sized must-do; OS if FHS/usr-merge."
+
+  - id: debian-developers-reference
+    title: Debian Developer's Reference
+    canonical_url: https://www.debian.org/doc/manuals/developers-reference/
+    git: https://salsa.debian.org/debian/developers-reference.git
+    watch_path: index.rst
+    packs:
+      - debian-application-policy.md
+    split: application
+    pin_kind: version
+    pin: "14.14"
+    detect:
+      regex: 'developers-reference ([0-9]+(?:\.[0-9]+)*)'
+      group: 1
+    cadence: weekly
+    notes: "DevRef version/date in Debian Application §1; NEW/upload procedure in §8."
+
+  - id: debian-new-checklist
+    title: Debian NEW queue
+    # ftp-master.debian.org/NEW-checklist.html 404s as of 2026-08-25 and is
+    # no longer in ftp-team/website.git. Watch the live NEW page instead.
+    canonical_url: https://ftp-master.debian.org/new.html
+    git: https://salsa.debian.org/ftp-team/website.git
+    watch_path: null
+    packs:
+      - debian-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "Summary for: NEW"
+    detect:
+      regex: 'Summary for: NEW'
+    cadence: weekly
+    notes: "NEW queue / missing checklist → Debian Application §8–9; do not cite REJECT-FAQ.html."
+
+  - id: debian-reject-html
+    title: ftp-master rejection mails
+    canonical_url: https://ftp-master.debian.org/reject.html
+    git: https://salsa.debian.org/ftp-team/website.git
+    watch_path: reject.html
+    packs:
+      - debian-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "Deciphering Rejection mails"
+    detect:
+      regex: 'Deciphering Rejection mails'
+    cadence: weekly
+    notes: "New reject reasons → Debian Application §9 common rejects. Not REJECT-FAQ.html."
+
+  - id: debian-dfsg-new-queue
+    title: DFSG NEW dashboard
+    canonical_url: https://dfsg-new-queue.debian.org/
+    git: https://salsa.debian.org/dfsg-team/dfsg-new-queue.git
+    watch_path: null
+    packs:
+      - debian-os-policy.md
+      - debian-application-policy.md
+    split: both
+    pin_kind: regex
+    pin: "DFSG, Licensing & New Packages Team"
+    detect:
+      regex: 'DFSG, Licensing & New Packages Team'
+    cadence: weekly
+    notes: "Team/process change → Debian OS DFSG archive law + Debian Application §8 NEW."
+
+  - id: debian-devel-announce
+    title: debian-devel-announce
+    canonical_url: https://lists.debian.org/debian-devel-announce/
+    git: null
+    watch_path: null
+    packs:
+      - debian-os-policy.md
+      - debian-application-policy.md
+      - README.md
+    split: both
+    pin_kind: regex
+    pin: "debian-devel-announce"
+    detect:
+      regex: 'debian-devel-announce'
+    cadence: continuous
+    notes: "GR / freeze / DFSG-team mail → Debian OS archive + README composition; never Flathub."
+
+  - id: debian-ai-gr
+    title: General Resolution LLM usage in Debian
+    canonical_url: https://www.debian.org/vote/2026/vote_002
+    git: null
+    watch_path: null
+    packs:
+      - debian-os-policy.md
+      - debian-application-policy.md
+      - README.md
+    split: both
+    pin_kind: date
+    pin: "2026-08-28"
+    detect:
+      regex: 'Friday (2026-08-28) 23:59:59 UTC'
+      group: 1
+    cadence: continuous
+    notes: "Result → Debian OS Social Contract/DFSG + Application NEW; do not copy Flathub AI ban."
+
+  - id: debian-releases
+    title: Debian releases
+    canonical_url: https://www.debian.org/releases/
+    git: null
+    watch_path: null
+    packs:
+      - debian-os-policy.md
+      - README.md
+    split: os
+    pin_kind: regex
+    pin: "trixie/Forky"
+    detect:
+      regex: 'codenamed\s+<em>(trixie)</em>[\s\S]+?<td>14</td>\s*<td><a href="forky/">(Forky)</a>'
+      join: "/"
+    cadence: weekly
+    notes: "Stable/testing rename → Debian OS §2 suite graph (trixie stable, Forky testing)."
+
+  # dep.debian.org did not resolve here on 2026-08-25; pages.debian.net is the
+  # published DEP tree (same git: salsa.debian.org/dep-team/deps).
+  - id: debian-dep-8
+    title: "DEP-8: automatic as-installed package testing"
+    canonical_url: https://dep-team.pages.debian.net/deps/dep8/
+    git: https://salsa.debian.org/dep-team/deps.git
+    watch_path: web/deps/dep8.mdwn
+    packs:
+      - debian-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "DRAFT"
+    detect:
+      regex: 'State:\s*(DRAFT|CANDIDATE|ACCEPTED|OBSOLETE)'
+      group: 1
+    cadence: weekly
+    notes: "Status/spec change → Debian Application §7 autopkgtest / debian/tests/control."
+
+  - id: debian-dep-12
+    title: "DEP-12: per-package machine-readable upstream metadata"
+    canonical_url: https://dep-team.pages.debian.net/deps/dep12/
+    git: https://salsa.debian.org/dep-team/deps.git
+    watch_path: web/deps/dep12.mdwn
+    packs:
+      - debian-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "ACCEPTED"
+    detect:
+      regex: 'State:\s*(DRAFT|CANDIDATE|ACCEPTED|OBSOLETE)'
+      group: 1
+    cadence: weekly
+    notes: "debian/upstream/metadata change → Debian Application package identity / watch."
+
+  - id: debian-dep-14
+    title: "DEP-14: recommended Git packaging layout"
+    canonical_url: https://dep-team.pages.debian.net/deps/dep14/
+    git: https://salsa.debian.org/dep-team/deps.git
+    watch_path: web/deps/dep14.mdwn
+    packs:
+      - debian-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "CANDIDATE"
+    detect:
+      regex: 'State:\s*(DRAFT|CANDIDATE|ACCEPTED|OBSOLETE)'
+      group: 1
+    cadence: weekly
+    notes: "Vcs layout / tag2upload branch names → Debian Application Vcs-* and upload."
+
+  - id: debian-dep-17
+    title: "DEP-17: usr-merge aliasing"
+    canonical_url: https://dep-team.pages.debian.net/deps/dep17/
+    git: https://salsa.debian.org/dep-team/deps.git
+    watch_path: web/deps/dep17.mdwn
+    packs:
+      - debian-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "ACCEPTED"
+    detect:
+      regex: 'State:\s*(DRAFT|CANDIDATE|ACCEPTED|OBSOLETE)'
+      group: 1
+    cadence: weekly
+    notes: "Aliasing hazards → Debian OS §3 FHS / usr-merge; not a Flatpak prefix rule."
+
+  - id: debian-copyright-format
+    title: Machine-readable debian/copyright (DEP-5)
+    canonical_url: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+    git: https://salsa.debian.org/dbnpolicy/policy.git
+    watch_path: copyright-format/copyright-format-1.0.xml
+    packs:
+      - debian-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "Machine-readable debian/copyright file"
+    detect:
+      regex: 'Machine-readable debian/copyright file'
+    cadence: weekly
+    notes: "Format change → Debian Application §4 debian/copyright; not AppStream SPDX."
+
+  - id: debian-tag2upload
+    title: tag2upload
+    canonical_url: https://wiki.debian.org/tag2upload
+    git: null
+    watch_path: null
+    packs:
+      - debian-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "git-debpush"
+    detect:
+      regex: 'git-debpush'
+    cadence: weekly
+    notes: "Service status / DEP-14 tags → Debian Application upload path; not Flathub PRs."
+
+  - id: fhs
+    title: Filesystem Hierarchy Standard
+    canonical_url: https://specifications.freedesktop.org/fhs/latest/
+    git: https://gitlab.freedesktop.org/xdg/xdg-specs.git
+    watch_path: fhs
+    packs:
+      - debian-os-policy.md
+    split: os
+    pin_kind: version
+    pin: "3.0"
+    detect:
+      regex: 'Version:\s*(?:<[^>]+>\s*)*Version ([0-9]+\.[0-9]+)'
+      group: 1
+    cadence: weekly
+    notes: "FHS version → Debian OS §3 paths; never apply /usr rules to Flatpak /app."
+
+  # ------------------------------------------------------------------
+  # GNOME
+  # ------------------------------------------------------------------
+
+  - id: gnome-hig
+    title: GNOME Human Interface Guidelines
+    canonical_url: https://developer.gnome.org/hig/
+    git: https://gitlab.gnome.org/Teams/Websites/developer.gnome.org-hig.git
+    watch_path: index.rst
+    packs:
+      - gnome-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "GTK 4"
+    detect:
+      regex: 'GTK 4'
+    cadence: gnome-point-zero
+    notes: "HIG rewrite → GNOME Application §1 principles/patterns; not Flathub quality banners."
+
+  - id: gnome-app-criteria
+    title: GNOME App Criteria
+    canonical_url: https://gitlab.gnome.org/Teams/Releng/AppOrganization/-/raw/main/AppCriteria.md
+    git: https://gitlab.gnome.org/Teams/Releng/AppOrganization.git
+    watch_path: AppCriteria.md
+    packs:
+      - gnome-application-policy.md
+      - gnome-os-policy.md
+    split: both
+    pin_kind: regex
+    pin: "Uses GTK 4 + Libadwaita"
+    detect:
+      regex: 'Uses GTK 4 \+ Libadwaita'
+    cadence: weekly
+    notes: "App rows → GNOME Application; Flathub/runtime rows → GNOME OS only."
+
+  - id: gnome-official-app-definition
+    title: Official GNOME App Definition
+    canonical_url: https://gitlab.gnome.org/Teams/Releng/AppOrganization/-/raw/main/OfficialAppDefinition.md
+    git: https://gitlab.gnome.org/Teams/Releng/AppOrganization.git
+    watch_path: OfficialAppDefinition.md
+    packs:
+      - gnome-application-policy.md
+      - gnome-os-policy.md
+    split: both
+    pin_kind: regex
+    pin: "Official GNOME"
+    detect:
+      regex: 'Official GNOME'
+    cadence: weekly
+    notes: "Core vs Circle identity → GNOME Application trademark + GNOME OS Core membership."
+
+  - id: gnome-app-lifecycle
+    title: GNOME official app processes (AppLifecycle)
+    canonical_url: https://gitlab.gnome.org/Teams/Releng/AppOrganization/-/raw/main/AppLifecycle.md
+    git: https://gitlab.gnome.org/Teams/Releng/AppOrganization.git
+    watch_path: AppLifecycle.md
+    packs:
+      - gnome-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "incubation"
+    detect:
+      regex: 'incubation'
+    cadence: weekly
+    notes: "Incubator → Core process → GNOME OS §9; not Debian NEW."
+
+  - id: gnome-circle
+    title: GNOME Circle
+    canonical_url: https://gitlab.gnome.org/Teams/Circle/-/raw/main/README.md
+    git: https://gitlab.gnome.org/Teams/Circle.git
+    watch_path: README.md
+    packs:
+      - gnome-application-policy.md
+      - gnome-os-policy.md
+    split: both
+    pin_kind: regex
+    pin: "Submissions are currently closed"
+    detect:
+      regex: 'Submissions are currently closed'
+    cadence: weekly
+    notes: "Applications-closed (blog 2026-05-29) → Application quality vs OS store gates."
+
+  - id: gnome-release-calendar
+    title: GNOME release calendar
+    canonical_url: https://release.gnome.org/calendar/
+    git: null
+    watch_path: null
+    packs:
+      - gnome-os-policy.md
+      - gnome-application-policy.md
+    split: os
+    pin_kind: regex
+    pin: "51/50/49"
+    detect:
+      regex: '<td>Unstable</td>\s*<td>(\d+)</td>[\s\S]+?<td>Stable</td>\s*<td>(\d+)</td>[\s\S]+?<td>Old stable</td>\s*<td>(\d+)</td>'
+      join: "/"
+    cadence: continuous
+    notes: "Branch flip → GNOME OS runtime EOL + Application GTK target; 50 stable, 49 old-stable, 51 unstable."
+
+  - id: gnome-schedule-ics
+    title: GNOME release schedule (ICS)
+    canonical_url: https://release.gnome.org/calendar/schedule.ics
+    git: null
+    watch_path: null
+    packs:
+      - gnome-os-policy.md
+    split: os
+    pin_kind: date
+    pin: "20260912"
+    detect:
+      regex: 'DTSTART;VALUE=DATE:(20260912)[\s\S]{0,1500}?SUMMARY:GNOME 51\.0 newstable tarballs due'
+      group: 1
+    cadence: continuous
+    notes: "51.0 tarballs 2026-09-12, release 2026-09-16; 49 runtime EOL around 51.1 2026-10-10."
+
+  - id: gnome-build-meta
+    title: gnome-build-meta
+    canonical_url: https://gitlab.gnome.org/GNOME/gnome-build-meta/-/raw/master/README.md
+    git: https://gitlab.gnome.org/GNOME/gnome-build-meta.git
+    watch_path: project.conf
+    packs:
+      - gnome-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "GNOME OS"
+    detect:
+      regex: 'GNOME OS'
+    cadence: weekly
+    notes: "Core module / image build → GNOME OS §8 images; not Debian FHS."
+
+  - id: gnome-developer-integrating
+    title: GNOME maintainer integrating guidelines
+    canonical_url: https://developer.gnome.org/documentation/guidelines/maintainer/integrating.html
+    git: https://gitlab.gnome.org/GNOME/gnome-devel-docs.git
+    watch_path: null
+    packs:
+      - gnome-os-policy.md
+      - gnome-application-policy.md
+    split: both
+    pin_kind: regex
+    pin: "D-Bus activation"
+    detect:
+      regex: 'D-Bus [Aa]ctivation|DBusActivatable'
+    cadence: gnome-point-zero
+    notes: "Desktop/D-Bus roles → Application integrating APIs + OS session file roles."
+
+  - id: gnome-developer-guidelines
+    title: GNOME developer guidelines
+    canonical_url: https://developer.gnome.org/documentation/guidelines.html
+    git: https://gitlab.gnome.org/GNOME/gnome-devel-docs.git
+    watch_path: null
+    packs:
+      - gnome-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "Human Interface Guidelines"
+    detect:
+      regex: 'Human Interface Guidelines'
+    cadence: gnome-point-zero
+    notes: "Programming/a11y/l10n/maintainer index → GNOME Application how-to-build."
+
+  - id: gnome-software-metadata
+    title: GNOME Software metadata meanings
+    canonical_url: https://gnome.pages.gitlab.gnome.org/gnome-software/help/C/software-metadata.html
+    git: https://gitlab.gnome.org/GNOME/gnome-software.git
+    watch_path: help/C/software-metadata.page
+    packs:
+      - gnome-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "software-metadata"
+    detect:
+      regex: 'software-metadata|Safety tile|OARS'
+    cadence: gnome-point-zero
+    notes: "Safety/OARS tiles → GNOME OS Software; XML contents stay GNOME Application."
+
+  # ------------------------------------------------------------------
+  # Flatpak / Flathub
+  # ------------------------------------------------------------------
+
+  - id: flathub-requirements
+    title: Flathub app requirements
+    canonical_url: https://docs.flathub.org/docs/for-app-authors/requirements
+    git: https://github.com/flathub/documentation.git
+    watch_path: docs/for-app-authors/requirements.md
+    packs:
+      - gnome-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "Generative AI policy"
+    detect:
+      regex: 'Generative AI policy'
+    cadence: weekly
+    notes: "Store AI / ID / inclusion → GNOME OS §7 only. Never Debian Application."
+
+  - id: flathub-quality-guidelines
+    title: Flathub quality guidelines
+    canonical_url: https://docs.flathub.org/docs/for-app-authors/metainfo-guidelines/quality-guidelines
+    git: https://github.com/flathub/documentation.git
+    watch_path: docs/for-app-authors/metainfo-guidelines/quality-guidelines.md
+    packs:
+      - gnome-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "not required for submission"
+    detect:
+      regex: 'not required for submission'
+    cadence: weekly
+    notes: "Promotion extras (banner, 10–25 char summary) → GNOME OS store; HIG naming stays Application."
+
+  - id: flathub-runtimes
+    title: Flathub runtimes
+    canonical_url: https://docs.flathub.org/docs/for-app-authors/runtimes
+    git: https://github.com/flathub/documentation.git
+    watch_path: docs/for-app-authors/runtimes.md
+    packs:
+      - gnome-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "GNOME runtime"
+    detect:
+      regex: 'GNOME runtime'
+    cadence: weekly
+    notes: "Runtime/SDK EOL → GNOME OS §6; 49 runtime EOL around 51.1 (2026-10-10)."
+
+  - id: flatpak-sandbox-permissions
+    title: Flatpak sandbox permissions
+    canonical_url: https://docs.flatpak.org/en/latest/sandbox-permissions.html
+    git: https://github.com/flatpak/docs.git
+    watch_path: sandbox-permissions.rst
+    packs:
+      - gnome-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "finish-args"
+    detect:
+      regex: 'finish-args|sandbox permission'
+    cadence: gnome-point-zero
+    notes: "finish-args / portals-over-static → GNOME OS payload; not a .deb rule."
+
+  - id: xdg-desktop-portal
+    title: xdg-desktop-portal documentation
+    canonical_url: https://flatpak.github.io/xdg-desktop-portal/docs/
+    git: https://github.com/flatpak/xdg-desktop-portal.git
+    watch_path: doc
+    packs:
+      - gnome-os-policy.md
+      - gnome-application-policy.md
+    split: both
+    pin_kind: regex
+    pin: "xdg-desktop-portal"
+    detect:
+      regex: 'xdg-desktop-portal'
+    cadence: gnome-point-zero
+    notes: "New portal → OS session backends + Application GTK APIs; not Debian FHS."
+
+  - id: appstream-spec
+    title: AppStream specification
+    canonical_url: https://www.freedesktop.org/software/appstream/docs/
+    git: https://github.com/ximion/appstream.git
+    watch_path: docs
+    packs:
+      - debian-application-policy.md
+      - gnome-application-policy.md
+      - gnome-os-policy.md
+    split: both
+    pin_kind: version
+    pin: "1.0"
+    detect:
+      regex: 'AppStream ([0-9]+\.[0-9]+)'
+      group: 1
+    cadence: gnome-point-zero
+    notes: "Metainfo tags → Application contents; install path stays the payload OS pack."
+
+  # ------------------------------------------------------------------
+  # Freedesktop
+  # ------------------------------------------------------------------
+
+  - id: xdg-desktop-entry
+    title: Desktop Entry Specification
+    canonical_url: https://specifications.freedesktop.org/desktop-entry-spec/latest/
+    git: https://gitlab.freedesktop.org/xdg/xdg-specs.git
+    watch_path: desktop-entry
+    packs:
+      - debian-os-policy.md
+      - debian-application-policy.md
+      - gnome-application-policy.md
+    split: both
+    pin_kind: version
+    pin: "1.5"
+    detect:
+      regex: 'Version:\s*(?:<[^>]+>\s*)*Version ([0-9]+\.[0-9]+)'
+      group: 1
+    cadence: gnome-point-zero
+    notes: "Keys/Exec/D-Bus → Application desktop contents; path is payload OS."
+
+  - id: xdg-icon-theme
+    title: Icon Theme Specification
+    canonical_url: https://specifications.freedesktop.org/icon-theme-spec/latest/
+    git: https://gitlab.freedesktop.org/xdg/xdg-specs.git
+    watch_path: icon-theme
+    packs:
+      - debian-os-policy.md
+      - debian-application-policy.md
+      - gnome-application-policy.md
+    split: both
+    pin_kind: regex
+    pin: "Icon Theme Specification"
+    detect:
+      regex: 'Icon Theme Specification'
+    cadence: gnome-point-zero
+    notes: "hicolor sizes → Debian Application minima vs GNOME Application symbolic/scalable."
+
+  - id: xdg-shared-mime-info
+    title: Shared MIME-info Database
+    canonical_url: https://specifications.freedesktop.org/shared-mime-info-spec/latest/
+    git: https://gitlab.freedesktop.org/xdg/shared-mime-info.git
+    watch_path: shared-mime-info-spec.xml
+    packs:
+      - debian-os-policy.md
+      - debian-application-policy.md
+      - gnome-application-policy.md
+    split: both
+    pin_kind: regex
+    pin: "Shared MIME-info"
+    detect:
+      regex: 'Shared MIME-info'
+    cadence: gnome-point-zero
+    notes: "MIME packages → Application contents + OS mailcap/desktop registration."
+
+  - id: xdg-basedir
+    title: XDG Base Directory Specification
+    canonical_url: https://specifications.freedesktop.org/basedir-spec/latest/
+    git: https://gitlab.freedesktop.org/xdg/xdg-specs.git
+    watch_path: basedir
+    packs:
+      - debian-os-policy.md
+      - gnome-os-policy.md
+    split: os
+    pin_kind: version
+    pin: "0.8"
+    detect:
+      regex: 'Version:\s*(?:<[^>]+>\s*)*Version ([0-9]+\.[0-9]+)'
+      group: 1
+    cadence: gnome-point-zero
+    notes: "XDG dirs → Debian OS user state; Flatpak remap stays GNOME OS payload."

@@ -1,0 +1,289 @@
+# Official-source watch list for c-dev-policy.
+#
+# Pins last verified: 2026-08-29.
+# Do not scrape these manuals into the packs. On DRIFT, patch the owning
+# pack with a bite-sized rule, then bump `pin` here.
+#
+# split: language | ecosystem | os | both | meta
+# vcpkg/Conan/sanitizers are extras. Distro gcc belongs in c-os-policy.md.
+
+schema_version: 1
+verified: "2026-08-29"
+
+packs:
+  - c-language-policy.md
+  - c-ecosystem-policy.md
+  - c-os-policy.md
+  - README.md
+
+sources:
+
+  # ------------------------------------------------------------------
+  # Language
+  # ------------------------------------------------------------------
+
+  - id: wg14-projects
+    title: WG14 project status (ISO C)
+    canonical_url: https://www.open-std.org/JTC1/SC22/wg14/www/projects
+    git: null
+    watch_path: null
+    packs:
+      - c-language-policy.md
+      - README.md
+    split: language
+    pin_kind: regex
+    pin: "ISO/IEC 9899:2024"
+    detect:
+      regex: 'ISO/IEC 9899:2024'
+    cadence: meetings
+    notes: "C23 published. New revision heading → Language C half + README pin."
+
+  - id: isocpp-status
+    title: ISO C++ status
+    canonical_url: https://isocpp.org/std/status
+    git: null
+    watch_path: null
+    packs:
+      - c-language-policy.md
+      - README.md
+    split: language
+    pin_kind: regex
+    pin: "C++23"
+    detect:
+      regex: 'C\+\+23'
+    cadence: meetings
+    notes: "C++26 publication → Language C++ half ship bar. Do not require c++26 until published."
+
+  - id: gcc-c-status
+    title: GCC C status
+    canonical_url: https://gcc.gnu.org/projects/c-status.html
+    git: null
+    watch_path: null
+    packs:
+      - c-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "C23"
+    detect:
+      regex: 'C23'
+    cadence: few-months
+    notes: "GCC default C dialect → Language §3. OS pack owns which gcc is installed."
+
+  - id: gcc-cxx-status
+    title: GCC C++ status
+    canonical_url: https://gcc.gnu.org/projects/cxx-status.html
+    git: null
+    watch_path: null
+    packs:
+      - c-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "C++23"
+    detect:
+      regex: 'C\+\+23'
+    cadence: few-months
+    notes: "GCC C++ dialect table → Language §5."
+
+  - id: clang-c-status
+    title: Clang C status
+    canonical_url: https://clang.llvm.org/c_status.html
+    git: https://github.com/llvm/llvm-project.git
+    watch_path: clang/www/c_status.html
+    packs:
+      - c-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "C23"
+    detect:
+      regex: 'C23'
+    cadence: few-months
+    notes: "Clang C dialect → Language C half."
+
+  - id: clang-cxx-status
+    title: Clang C++ status
+    canonical_url: https://clang.llvm.org/cxx_status.html
+    git: https://github.com/llvm/llvm-project.git
+    watch_path: clang/www/cxx_status.html
+    packs:
+      - c-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "C++23"
+    detect:
+      regex: 'C\+\+23'
+    cadence: few-months
+    notes: "Clang C++ dialect → Language C++ half. C++26 remains not the ship bar."
+
+  - id: clang-format-docs
+    title: ClangFormat
+    canonical_url: https://clang.llvm.org/docs/ClangFormat.html
+    git: https://github.com/llvm/llvm-project.git
+    watch_path: clang/docs/ClangFormat.rst
+    packs:
+      - c-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "clang-format"
+    detect:
+      regex: 'clang-format'
+    cadence: few-months
+    notes: "Default style remains LLVM unless the page says otherwise. House styles are forks."
+
+  - id: clang-tidy-docs
+    title: clang-tidy
+    canonical_url: https://clang.llvm.org/extra/clang-tidy/
+    git: https://github.com/llvm/llvm-project.git
+    watch_path: clang-tools-extra/docs/clang-tidy/index.rst
+    packs:
+      - c-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "clang-tidy"
+    detect:
+      regex: 'clang-tidy'
+    cadence: few-months
+    notes: "EXTRA linter. Do not enable all checks as if they were gcc defaults."
+
+  - id: clang-ubsan
+    title: UndefinedBehaviorSanitizer
+    canonical_url: https://clang.llvm.org/docs/UndefinedBehaviorSanitizer.html
+    git: https://github.com/llvm/llvm-project.git
+    watch_path: clang/docs/UndefinedBehaviorSanitizer.rst
+    packs:
+      - c-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "UndefinedBehaviorSanitizer"
+    detect:
+      regex: 'UndefinedBehaviorSanitizer'
+    cadence: few-months
+    notes: "EXTRA. Language §7. Not an OS package build gate."
+
+  # ------------------------------------------------------------------
+  # Ecosystem
+  # ------------------------------------------------------------------
+
+  - id: cmake-latest
+    title: CMake documentation
+    canonical_url: https://cmake.org/cmake/help/latest/
+    git: https://gitlab.kitware.com/cmake/cmake.git
+    watch_path: Help/index.rst
+    packs:
+      - c-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "CMake Reference Documentation"
+    detect:
+      regex: 'CMake Reference Documentation'
+    cadence: few-months
+    notes: "CMake is the common build contract. Version lag on a distro is OS."
+
+  - id: cmake-packages
+    title: cmake-packages
+    canonical_url: https://cmake.org/cmake/help/latest/manual/cmake-packages.7.html
+    git: https://gitlab.kitware.com/cmake/cmake.git
+    watch_path: Help/manual/cmake-packages.7.rst
+    packs:
+      - c-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "find_package"
+    detect:
+      regex: 'find_package'
+    cadence: few-months
+    notes: "Imported targets / Config.cmake → Ecosystem §4."
+
+  - id: meson-docs
+    title: Meson
+    canonical_url: https://mesonbuild.com/
+    git: https://github.com/mesonbuild/meson.git
+    watch_path: docs
+    packs:
+      - c-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "Meson"
+    detect:
+      regex: 'Meson'
+    cadence: few-months
+    notes: "Alternative build contract. Do not merge into CMake chapters."
+
+  - id: pkg-config
+    title: pkg-config
+    canonical_url: https://www.freedesktop.org/wiki/Software/pkg-config/
+    git: null
+    watch_path: null
+    packs:
+      - c-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "pkg-config"
+    detect:
+      regex: 'pkg-config'
+    cadence: slower
+    notes: ".pc keys are Ecosystem; install path is OS."
+
+  # ------------------------------------------------------------------
+  # OS
+  # ------------------------------------------------------------------
+
+  - id: debian-sharedlibs
+    title: Debian Policy shared libraries
+    canonical_url: https://www.debian.org/doc/debian-policy/ch-sharedlibs.html
+    git: https://salsa.debian.org/dbnpolicy/policy.git
+    watch_path: policy/ch-sharedlibs.rst
+    packs:
+      - c-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "shared libraries"
+    detect:
+      regex: 'shared libraries'
+    cadence: weekly
+    notes: "SONAME load/shlibs → OS Debian carve-out. Declared SOVERSION stays Ecosystem."
+
+  - id: archwiki-cpp
+    title: ArchWiki C++
+    canonical_url: https://wiki.archlinux.org/title/C++
+    git: null
+    watch_path: null
+    packs:
+      - c-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "gcc"
+    detect:
+      regex: 'gcc'
+    cadence: weekly
+    notes: "base-devel / gcc → OS Arch carve-out."
+
+  - id: msvc-std
+    title: MSVC /std language standard
+    canonical_url: https://learn.microsoft.com/en-us/cpp/build/reference/std-specify-language-standard-version
+    git: null
+    watch_path: null
+    packs:
+      - c-language-policy.md
+      - c-os-policy.md
+    split: both
+    pin_kind: regex
+    pin: "/std"
+    detect:
+      regex: '/std'
+    cadence: few-months
+    notes: "Flag is Language; cl.exe install is OS Windows. C23 may still be incomplete on MSVC."
+
+  - id: clang-users-manual
+    title: Clang users manual
+    canonical_url: https://clang.llvm.org/docs/UsersManual.html
+    git: https://github.com/llvm/llvm-project.git
+    watch_path: clang/docs/UsersManual.rst
+    packs:
+      - c-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "Clang"
+    detect:
+      regex: 'Clang'
+    cadence: few-months
+    notes: "How clang is invoked on a host. Apple clang lag is macOS carve-out."

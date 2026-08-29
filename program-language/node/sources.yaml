@@ -1,0 +1,170 @@
+# Official-source watch list for node-dev-policy.
+#
+# Pins last verified: 2026-08-29.
+# split: language | ecosystem | os | both | meta
+# Named npm allowlists do not belong in the language pack.
+# Trust bar lives in node-ecosystem-policy.md.
+
+schema_version: 1
+verified: "2026-08-29"
+
+packs:
+  - node-language-policy.md
+  - node-ecosystem-policy.md
+  - node-os-policy.md
+  - README.md
+
+sources:
+
+  - id: node-releases
+    title: Node.js release schedule
+    canonical_url: https://github.com/nodejs/Release
+    git: https://github.com/nodejs/Release.git
+    watch_path: README.md
+    packs:
+      - node-language-policy.md
+      - node-os-policy.md
+      - README.md
+    split: both
+    pin_kind: regex
+    pin: "24"
+    detect:
+      regex: '\b24\b'
+    cadence: weekly
+    notes: "LTS line. 26 becomes LTS ~October 2026 → Language ship bar."
+
+  - id: node-download
+    title: Node.js download
+    canonical_url: https://nodejs.org/en/download
+    git: null
+    watch_path: null
+    packs:
+      - node-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "LTS"
+    detect:
+      regex: 'LTS'
+    cadence: weekly
+    notes: "Official binaries vs distro packages → OS pack."
+
+  - id: node-crypto
+    title: Node.js crypto API
+    canonical_url: https://nodejs.org/docs/latest-v24.x/api/crypto.html
+    git: https://github.com/nodejs/node.git
+    watch_path: doc/api/crypto.md
+    packs:
+      - node-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "crypto"
+    detect:
+      regex: 'crypto'
+    cadence: few-months
+    notes: "Builtin crypto contract. Language §3."
+
+  - id: node-test
+    title: Node.js test runner
+    canonical_url: https://nodejs.org/docs/latest-v24.x/api/test.html
+    git: https://github.com/nodejs/node.git
+    watch_path: doc/api/test.md
+    packs:
+      - node-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "test runner"
+    detect:
+      regex: 'test runner'
+    cadence: few-months
+    notes: "Builtin tests first. Jest/vitest are Ecosystem trust-bar."
+
+  - id: npm-ci
+    title: npm ci
+    # Unversioned /cli/commands/npm-ci is a tiny SPA stub for this UA.
+    canonical_url: https://docs.npmjs.com/cli/v10/commands/npm-ci
+    git: https://github.com/npm/cli.git
+    watch_path: docs/lib/commands/ci.md
+    packs:
+      - node-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "npm ci"
+    detect:
+      regex: 'npm ci'
+    cadence: few-months
+    notes: "Lockfile-strict install. Pair with --ignore-scripts."
+
+  - id: npm-audit
+    title: npm audit
+    canonical_url: https://docs.npmjs.com/cli/v10/commands/npm-audit
+    git: https://github.com/npm/cli.git
+    watch_path: docs/lib/commands/audit.md
+    packs:
+      - node-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "npm audit"
+    detect:
+      regex: 'npm audit'
+    cadence: few-months
+    notes: "Advisory gate. Production high/critical fails CI."
+
+  - id: package-lock
+    title: package-lock.json
+    canonical_url: https://docs.npmjs.com/cli/v10/configuring-npm/package-lock-json
+    git: https://github.com/npm/cli.git
+    watch_path: docs/lib/configuring-npm/package-lock-json.md
+    packs:
+      - node-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "lockfileVersion"
+    detect:
+      regex: 'lockfileVersion'
+    cadence: few-months
+    notes: "integrity hashes analog of pip --require-hashes."
+
+  - id: npm-trusted-publishers
+    title: npm trusted publishers
+    canonical_url: https://docs.npmjs.com/trusted-publishers
+    git: null
+    watch_path: null
+    packs:
+      - node-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "Trusted publishing"
+    detect:
+      regex: 'Trusted publishing'
+    cadence: weekly
+    notes: "OIDC publish. Classic tokens revoked 2025–2026."
+
+  - id: debian-nodejs
+    title: Debian nodejs package
+    canonical_url: https://packages.debian.org/stable/nodejs
+    git: null
+    watch_path: null
+    packs:
+      - node-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "nodejs"
+    detect:
+      regex: 'nodejs'
+    cadence: weekly
+    notes: "wiki.debian.org/Javascript 403s this UA. Suite nodejs version → OS Debian."
+
+  - id: archwiki-nodejs
+    title: ArchWiki Node.js
+    canonical_url: https://wiki.archlinux.org/title/Node.js
+    git: null
+    watch_path: null
+    packs:
+      - node-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "nodejs"
+    detect:
+      regex: 'nodejs'
+    cadence: weekly
+    notes: "extra/nodejs vs npm → OS Arch carve-out."

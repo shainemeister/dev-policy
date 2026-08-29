@@ -1,0 +1,484 @@
+# Official-source watch list for rust-dev-policy.
+#
+# Pins last verified: 2026-08-29.
+# Do not scrape these manuals into the packs. On DRIFT, patch the owning
+# pack with a bite-sized rule, then bump `pin` here.
+#
+# Cadence:
+#   continuous   — crates.io policies, RustSec, rust-lang CoC
+#   six-weeks    — rustc / Cargo / Clippy stable
+#   slower       — API Guidelines, Nomicon, UCG, Style Guide, Edition Guide
+#
+# split: language | ecosystem | os | both | meta
+# cargo-deny / cargo-vet changes must land in rust-ecosystem-policy.md
+# extras, never as if they were rustc defaults.
+# Distro rustc / rustup-via-apt / MSVC belong in rust-os-policy.md.
+
+schema_version: 1
+verified: "2026-08-29"
+
+packs:
+  - rust-language-policy.md
+  - rust-ecosystem-policy.md
+  - rust-os-policy.md
+  - README.md
+
+sources:
+
+  # ------------------------------------------------------------------
+  # Language
+  # ------------------------------------------------------------------
+
+  - id: rust-releases
+    title: Rust release notes
+    canonical_url: https://doc.rust-lang.org/releases.html
+    git: https://github.com/rust-lang/rust.git
+    watch_path: RELEASES.md
+    packs:
+      - rust-language-policy.md
+      - rust-ecosystem-policy.md
+      - README.md
+    split: both
+    pin_kind: version
+    pin: "1.98.0"
+    detect:
+      regex: 'Version ([0-9]+\.[0-9]+\.[0-9]+) \('
+      group: 1
+    cadence: six-weeks
+    notes: "New stable → Language toolchain pin + README; MSRV discussion stays Ecosystem."
+
+  - id: rust-release-blog
+    title: Latest Rust stable announcement
+    canonical_url: https://blog.rust-lang.org/2026/08/20/Rust-1.98.0/
+    git: null
+    watch_path: null
+    packs:
+      - rust-language-policy.md
+      - README.md
+    split: language
+    pin_kind: regex
+    pin: "1.98.0"
+    detect:
+      regex: 'Announcing Rust ([0-9]+\.[0-9]+\.[0-9]+)'
+      group: 1
+    cadence: six-weeks
+    notes: "URL itself is versioned; on DRIFT move canonical_url to the new post and bump pin."
+
+  - id: rust-edition-2024
+    title: Rust 2024 Edition Guide
+    canonical_url: https://doc.rust-lang.org/edition-guide/rust-2024/
+    git: https://github.com/rust-lang/edition-guide.git
+    watch_path: src/rust-2024/index.md
+    packs:
+      - rust-language-policy.md
+    split: language
+    pin_kind: version
+    pin: "1.85.0"
+    detect:
+      regex: 'Release version</td><td><a href="[^"]+">([0-9]+\.[0-9]+\.[0-9]+)<'
+      group: 1
+    cadence: slower
+    notes: "Edition 2024 language changes → Language §2. Resolver 3 default is Ecosystem."
+
+  - id: rust-style-guide
+    title: Rust Style Guide
+    canonical_url: https://doc.rust-lang.org/style-guide/
+    git: https://github.com/rust-lang/rust.git
+    watch_path: src/doc/style-guide
+    packs:
+      - rust-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "The default Rust style"
+    detect:
+      regex: 'The default Rust style'
+    cadence: slower
+    notes: "Style-guide rewrite → Language §3 rustfmt defaults. Do not invent max_width."
+
+  - id: rustc-lint-groups
+    title: rustc lint groups
+    canonical_url: https://doc.rust-lang.org/rustc/lints/groups.html
+    git: https://github.com/rust-lang/rust.git
+    watch_path: src/doc/rustc/src/lints/groups.md
+    packs:
+      - rust-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "rust-2024-compatibility"
+    detect:
+      regex: 'rust-2024-compatibility'
+    cadence: six-weeks
+    notes: "New rustc lint group → Language §4. -D warnings stays a CI extra."
+
+  - id: clippy-lints
+    title: Clippy lint groups
+    canonical_url: https://doc.rust-lang.org/clippy/lints.html
+    git: https://github.com/rust-lang/rust-clippy.git
+    watch_path: book/src/lints.md
+    packs:
+      - rust-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "clippy::restriction"
+    detect:
+      regex: 'clippy::restriction'
+    cadence: six-weeks
+    notes: "restriction/pedantic policy change → Language §4. Never treat restriction as rustc default."
+
+  - id: rust-nomicon
+    title: The Rustonomicon
+    canonical_url: https://doc.rust-lang.org/nomicon/meet-safe-and-unsafe.html
+    git: https://github.com/rust-lang/nomicon.git
+    watch_path: src/meet-safe-and-unsafe.md
+    packs:
+      - rust-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "Meet Safe and Unsafe"
+    detect:
+      regex: 'Meet Safe and Unsafe'
+    cadence: slower
+    notes: "Unsafe intro rewrite → Language §6. Do not dump Nomicon chapters."
+
+  - id: rust-ucg
+    title: Unsafe Code Guidelines
+    canonical_url: https://rust-lang.github.io/unsafe-code-guidelines/
+    git: https://github.com/rust-lang/unsafe-code-guidelines.git
+    watch_path: README.md
+    packs:
+      - rust-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "Unsafe Code Guidelines"
+    detect:
+      regex: 'Unsafe Code Guidelines'
+    cadence: slower
+    notes: "UCG status change → Language §6 soundness map."
+
+  - id: rust-api-guidelines
+    title: Rust API Guidelines checklist
+    canonical_url: https://rust-lang.github.io/api-guidelines/checklist.html
+    git: https://github.com/rust-lang/api-guidelines.git
+    watch_path: src/checklist.md
+    packs:
+      - rust-language-policy.md
+      - rust-ecosystem-policy.md
+    split: both
+    pin_kind: regex
+    pin: "C-CASE"
+    detect:
+      regex: 'C-CASE'
+    cadence: slower
+    notes: "Checklist rows → Language API; C-METADATA / C-PERMISSIVE / C-STABLE also Ecosystem."
+
+  - id: rust-reference
+    title: The Rust Reference
+    canonical_url: https://doc.rust-lang.org/reference/
+    git: https://github.com/rust-lang/reference.git
+    watch_path: src/introduction.md
+    packs:
+      - rust-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "The Rust Reference"
+    detect:
+      regex: 'The Rust Reference'
+    cadence: six-weeks
+    notes: "Reference is the language contract. Bite-sized rules only; do not dump chapters."
+
+  - id: cargo-test
+    title: cargo test
+    canonical_url: https://doc.rust-lang.org/cargo/commands/cargo-test.html
+    git: https://github.com/rust-lang/cargo.git
+    watch_path: src/doc/src/commands/cargo-test.md
+    packs:
+      - rust-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "cargo test"
+    detect:
+      regex: 'cargo test'
+    cadence: six-weeks
+    notes: "Test command flags → Language §5. --all-targets still excludes doctests."
+
+  - id: rust-miri
+    title: Miri
+    canonical_url: https://github.com/rust-lang/miri
+    git: https://github.com/rust-lang/miri.git
+    watch_path: README.md
+    packs:
+      - rust-language-policy.md
+    split: language
+    pin_kind: regex
+    pin: "An interpreter for Rust's mid-level intermediate representation"
+    detect:
+      regex: "An interpreter for Rust's mid-level intermediate representation"
+    cadence: slower
+    notes: "Miri is a Language *audit extra*, not a stable rustc ship bar."
+
+  # ------------------------------------------------------------------
+  # Ecosystem
+  # ------------------------------------------------------------------
+
+  - id: cargo-manifest
+    title: Cargo manifest format
+    canonical_url: https://doc.rust-lang.org/cargo/reference/manifest.html
+    git: https://github.com/rust-lang/cargo.git
+    watch_path: src/doc/src/reference/manifest.md
+    packs:
+      - rust-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "The Manifest Format"
+    detect:
+      regex: 'The Manifest Format'
+    cadence: six-weeks
+    notes: "New required/optional keys → Ecosystem §2. [lints] table is Language-adjacent."
+
+  - id: cargo-rust-version
+    title: Cargo rust-version (MSRV)
+    canonical_url: https://doc.rust-lang.org/cargo/reference/rust-version.html
+    git: https://github.com/rust-lang/cargo.git
+    watch_path: src/doc/src/reference/rust-version.md
+    packs:
+      - rust-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "ignore-rust-version"
+    detect:
+      regex: 'ignore-rust-version'
+    cadence: six-weeks
+    notes: "MSRV semantics → Ecosystem §3. Distro rustc lag is rust-os-policy.md."
+
+  - id: cargo-lock-faq
+    title: Why have Cargo.lock in version control
+    canonical_url: https://doc.rust-lang.org/cargo/faq.html#why-have-cargolock-in-version-control
+    git: https://github.com/rust-lang/cargo.git
+    watch_path: src/doc/src/faq.md
+    packs:
+      - rust-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "defaults to tracking"
+    detect:
+      regex: 'defaults to tracking'
+    cadence: slower
+    notes: "Lockfile advice change → Ecosystem §4. Bins still commit lock; audit needs it."
+
+  - id: cargo-semver
+    title: Cargo SemVer compatibility
+    canonical_url: https://doc.rust-lang.org/cargo/reference/semver.html
+    git: https://github.com/rust-lang/cargo.git
+    watch_path: src/doc/src/reference/semver.md
+    packs:
+      - rust-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "Possibly-breaking change"
+    detect:
+      regex: 'Possibly-breaking change'
+    cadence: slower
+    notes: "New SemVer class → Ecosystem §5. cargo-semver-checks stays an extra."
+
+  - id: cargo-publishing
+    title: Cargo publishing
+    canonical_url: https://doc.rust-lang.org/cargo/reference/publishing.html
+    git: https://github.com/rust-lang/cargo.git
+    watch_path: src/doc/src/reference/publishing.md
+    packs:
+      - rust-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "cargo publish"
+    detect:
+      regex: 'cargo publish'
+    cadence: six-weeks
+    notes: "Publish/yank mechanics → Ecosystem §8. Not an OS package-manager queue."
+
+  - id: crates-io-policies
+    title: crates.io usage policy
+    # crates.io/policies 404s this User-Agent (SPA). Watch the Svelte source.
+    canonical_url: https://raw.githubusercontent.com/rust-lang/crates.io/main/svelte/src/routes/policies/+page.svelte
+    git: https://github.com/rust-lang/crates.io.git
+    watch_path: svelte/src/routes/policies/+page.svelte
+    packs:
+      - rust-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "first-come, first-serve"
+    detect:
+      regex: 'first-come, first-serve'
+    cadence: continuous
+    notes: "Human page https://crates.io/policies. Store policy → Ecosystem §8 only. Never an OS packager."
+
+  - id: rust-code-of-conduct
+    title: Rust Code of Conduct
+    canonical_url: https://www.rust-lang.org/policies/code-of-conduct
+    git: null
+    watch_path: null
+    packs:
+      - rust-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "Code of Conduct"
+    detect:
+      regex: 'Code of Conduct'
+    cadence: continuous
+    notes: "crates.io incorporates the CoC. Language pack does not own conduct."
+
+  - id: rustsec
+    title: RustSec Advisory Database
+    canonical_url: https://rustsec.org/
+    git: https://github.com/rustsec/advisory-db.git
+    watch_path: README.md
+    packs:
+      - rust-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "cargo-audit"
+    detect:
+      regex: 'cargo-audit'
+    cadence: continuous
+    notes: "Official advisory tooling → Ecosystem §6. cargo-deny remains extra."
+
+  - id: cargo-deny
+    title: cargo-deny
+    canonical_url: https://embarkstudios.github.io/cargo-deny/
+    git: https://github.com/EmbarkStudios/cargo-deny.git
+    watch_path: README.md
+    packs:
+      - rust-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "cargo deny check"
+    detect:
+      regex: 'cargo deny check'
+    cadence: six-weeks
+    notes: "EXTRA. Advisories/licenses/bans/sources → Ecosystem §7. Not rustc."
+
+  - id: cargo-vet
+    title: cargo-vet
+    canonical_url: https://mozilla.github.io/cargo-vet/built-in-criteria.html
+    git: https://github.com/mozilla/cargo-vet.git
+    watch_path: src/index.md
+    packs:
+      - rust-ecosystem-policy.md
+    split: ecosystem
+    pin_kind: regex
+    pin: "safe-to-deploy"
+    detect:
+      regex: 'safe-to-deploy'
+    cadence: slower
+    notes: "EXTRA. Human supply-chain audits → Ecosystem §7. Not crates.io admission."
+
+  # ------------------------------------------------------------------
+  # OS (shared + carve-outs)
+  # ------------------------------------------------------------------
+
+  - id: rustc-platform-support
+    title: rustc platform support
+    canonical_url: https://doc.rust-lang.org/rustc/platform-support.html
+    git: https://github.com/rust-lang/rust.git
+    watch_path: src/doc/rustc/src/platform-support.md
+    packs:
+      - rust-os-policy.md
+      - README.md
+    split: os
+    pin_kind: regex
+    pin: "aarch64-apple-darwin"
+    detect:
+      regex: 'aarch64-apple-darwin'
+    cadence: six-weeks
+    notes: "Tier table change → OS §1 triples. x86_64-apple-darwin demotion is RFC 3841."
+
+  - id: rustup-book
+    title: The rustup book
+    canonical_url: https://rust-lang.github.io/rustup/
+    git: https://github.com/rust-lang/rustup.git
+    watch_path: doc/src/index.md
+    packs:
+      - rust-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "The rustup book"
+    detect:
+      regex: 'The rustup book'
+    cadence: weekly
+    notes: "Installer policy → OS §2. Distro wrappers stay carve-outs."
+
+  - id: rustup-windows
+    title: rustup on Windows
+    canonical_url: https://rust-lang.github.io/rustup/installation/windows.html
+    git: https://github.com/rust-lang/rustup.git
+    watch_path: doc/src/installation/windows.md
+    packs:
+      - rust-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "Visual Studio"
+    detect:
+      regex: 'Visual Studio'
+    cadence: weekly
+    notes: "MSVC Build Tools / rustup-init → OS Windows carve-out."
+
+  - id: rustup-other
+    title: rustup via other package managers
+    canonical_url: https://rust-lang.github.io/rustup/installation/other.html
+    git: https://github.com/rust-lang/rustup.git
+    watch_path: doc/src/installation/other.html.md
+    packs:
+      - rust-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "Debian 13"
+    detect:
+      regex: 'Debian 13'
+    cadence: weekly
+    notes: "apt/brew/pacman rustup wrappers → OS §2 and Debian/Arch/macOS carve-outs. watch_path may be other.md."
+
+  - id: debian-rust-team-book
+    title: Debian Rust Team book
+    canonical_url: https://rust-team.pages.debian.net/book/
+    git: https://salsa.debian.org/rust-team/book.git
+    watch_path: src
+    packs:
+      - rust-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "Debian Rust Team"
+    detect:
+      regex: 'Debian Rust Team'
+    cadence: weekly
+    notes: "dh-cargo / debcargo / no-network → OS Debian carve-out only."
+
+  - id: archwiki-rust
+    title: ArchWiki Rust
+    canonical_url: https://wiki.archlinux.org/title/Rust
+    git: null
+    watch_path: null
+    packs:
+      - rust-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "rustup"
+    detect:
+      regex: 'rustup'
+    cadence: weekly
+    notes: "extra/rust vs extra/rustup → OS Arch carve-out."
+
+  - id: rfc-3841-apple-intel
+    title: "RFC 3841: demote x86_64-apple-darwin"
+    canonical_url: https://rust-lang.github.io/rfcs/3841-demote-x86_64-apple-darwin.html
+    git: https://github.com/rust-lang/rfcs.git
+    watch_path: text/3841-demote-x86_64-apple-darwin.md
+    packs:
+      - rust-os-policy.md
+      - README.md
+    split: os
+    pin_kind: regex
+    pin: "Tier 2 with host tools"
+    detect:
+      regex: 'Tier 2 with host tools'
+    cadence: slower
+    notes: "Intel Mac is not tier 1. macOS carve-out ship host is aarch64-apple-darwin."
+
