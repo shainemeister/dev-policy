@@ -9,6 +9,7 @@ Two buckets. Compose packs; do not merge them into one rulebook.
 ```text
 os/                         how an artifact lives on a system / store
   linux/                    Debian × GNOME (OS and application packs)
+  macos/                    Direct distribution × Mac App Store
 
 program-language/           what the code and its package world require
   rust/  python/  c/  node/ language × ecosystem × toolchain-on-OS
@@ -16,13 +17,15 @@ program-language/           what the code and its package world require
 
 Official manuals remain the authority. These files are working memory
 for humans and agents. Cite them; do not treat this tree as a substitute
-for Debian Policy, the HIG, the Rust Reference, PEPs, or npm docs.
+for Debian Policy, the HIG, Apple's distribution docs, the Rust
+Reference, PEPs, or npm docs.
 
 ## Overview
 
 | Bucket | Question | Family |
 |--------|----------|--------|
 | [os/linux](os/linux/README.md) | How this artifact is placed, packaged, and queued | Debian OS / Debian Application / GNOME OS / GNOME Application |
+| [os/macos](os/macos/README.md) | How a Mac app is sealed, placed, and queued | Direct OS / Direct Application / App Store OS / App Store Application |
 | [program-language/rust](program-language/rust/README.md) | What rustc, Cargo, and rustup check | Language / Ecosystem / OS carve-outs |
 | [program-language/python](program-language/python/README.md) | What CPython, PyPA, and PEP 668 check | Language / Ecosystem / OS carve-outs |
 | [program-language/c](program-language/c/README.md) | What ISO C/C++, compilers, and CMake check | Language / Ecosystem / OS carve-outs |
@@ -31,17 +34,20 @@ for Debian Policy, the HIG, the Rust Reference, PEPs, or npm docs.
 Language `*-os-policy.md` files stay **under the language**. They own
 toolchain install and distro lag (rustup vs apt rustc, PEP 668, MSVC).
 They do **not** own Debian Policy, FHS, lintian, NEW, or the HIG — those
-live in [os/linux](os/linux/README.md).
+live in [os/linux](os/linux/README.md). They do **not** own Developer ID,
+notarization, Gatekeeper, or App Review — those live in
+[os/macos](os/macos/README.md).
 
-Do not create empty `os/macos` or `os/windows` until those have their
-own manuals to map. macOS and Windows today are carve-outs inside each
-language OS pack.
+Windows stays a carve-out inside each language OS pack until it has
+its own manuals. The macOS carve-out still owns the toolchain (Xcode
+Command Line Tools, rustup, Homebrew prefixes).
 
 ## How to compose
 
 Pick **one payload OS** per ship format. Add language packs for the
 language you ship. Add `os/linux` packs when the artifact is a `.deb`,
-a Flatpak, or a GNOME-session app.
+a Flatpak, or a GNOME-session app. Add `os/macos` packs when the
+artifact is a Developer ID product or a Mac App Store app.
 
 | Deliverable | Open |
 |-------------|------|
@@ -51,6 +57,8 @@ a Flatpak, or a GNOME-session app.
 | Debian `.deb` of a Rust CLI | rust language + ecosystem + rust-os **Debian carve-out** + [Debian OS](os/linux/debian-os-policy.md) + [Debian Application](os/linux/debian-application-policy.md) |
 | GNOME-shaped Rust `.deb` | previous + [GNOME Application](os/linux/gnome-application-policy.md) + [GNOME OS](os/linux/gnome-os-policy.md) **session only** (not Flatpak payload) |
 | Flatpak / Flathub | [GNOME OS](os/linux/gnome-os-policy.md) payload + [GNOME Application](os/linux/gnome-application-policy.md) |
+| Direct Mac app (Developer ID) | language packs + macOS toolchain carve-out + [Direct OS](os/macos/direct-os-policy.md) + [Direct Application](os/macos/direct-application-policy.md) |
+| Mac App Store app | language packs + macOS toolchain carve-out + [App Store OS](os/macos/app-store-os-policy.md) + [App Store Application](os/macos/app-store-application-policy.md) + [Direct Application](os/macos/direct-application-policy.md) for HIG and bundle contents |
 | PyPI package / `npm publish` | matching language + ecosystem (skip OS store queues) |
 
 Hard rules:
@@ -65,6 +73,9 @@ Hard rules:
    Add a directory under `program-language/` instead.
 5. Do not fold a second distro into `os/linux`. Add a directory under
    `os/` instead.
+6. One macOS payload per artifact. Do not import App Store review,
+   sandbox-must, or store updates into Developer ID. Do not import
+   notarization or a Developer ID certificate into the Mac App Store.
 
 Family READMEs own the detailed composition tables and conflict-resolution
 grids. Start there after you pick the rows above.
@@ -78,6 +89,7 @@ pack, then bump the pin. Never dump official HTML into packs.
 ```bash
 python3 scripts/check_sources.py --offline
 python3 scripts/check_sources.py --offline --family os/linux
+python3 scripts/check_sources.py --offline --family os/macos
 python3 scripts/check_sources.py --offline --family program-language/rust
 ```
 
@@ -100,6 +112,7 @@ repo-kit. This section is not a second RULES tree.
 
 1. Open this README — buckets, composition table, checker.
 2. Open only the family READMEs for surfaces in play.
-3. Language OS packs for toolchain; `os/linux` for Debian/GNOME placement.
+3. Language OS packs for toolchain; `os/linux` for Debian/GNOME
+   placement; `os/macos` for Developer ID or the Mac App Store.
 4. `python3 scripts/check_sources.py --offline` before claiming a pin bump
    is complete.

@@ -334,9 +334,9 @@ formula. Placement:
 
 Do not install into Debian `/usr` on this OS.
 
-Distribution extra (not rustc): notarization and signing for binaries
-you ship outside the App Store (`codesign`, `notarytool`). Required
-by Apple for Gatekeeper, not by rustc. Label it extra.
+A Mac app's signing, notarization, Gatekeeper rules, and App Store
+payload are [os/macos](../../os/macos/README.md). This carve-out keeps
+the toolchain and the host triple.
 
 Do **not** import MSVC, apt, or pacman. Do **not** treat Intel Mac
 CI as tier 1.
@@ -419,7 +419,8 @@ macOS extra (when you ship a Mac binary):
 
 - Host `aarch64-apple-darwin` (or a documented Intel tier-2 build)
 - Xcode CLT present; `xcrun --show-sdk-path` works
-- Signing/notarization extra if Gatekeeper must accept it
+- If Gatekeeper must accept the binary, follow
+  [os/macos](../../os/macos/README.md) Direct OS
 
 Windows extra (when you ship a Windows binary):
 
@@ -436,8 +437,9 @@ Not rustfmt, Clippy, or `cargo test`.
 Not crates.io policy or RustSec's database (Ecosystem still runs
 `cargo audit` on every OS).
 
-Not a dump of Debian Policy, the ArchWiki, Apple notarization
-guides, or MSDN.
+Not a dump of Debian Policy or the ArchWiki. Apple signing,
+notarization, and App Review live in
+[os/macos](../../os/macos/README.md). Not MSDN.
 
 Not Android, iOS, WASM, or musl-first images.
 

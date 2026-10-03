@@ -235,8 +235,9 @@ declared. Do not Debian-SONAME a dylib.
 Homebrew prefix: `/opt/homebrew` (Apple Silicon), `/usr/local`
 (Intel). Linking Homebrew OpenSSL is this OS, not `libssl-dev`.
 
-Ship: dylib, framework, `.app`, or a Homebrew formula. Signing /
-notarization extra for Gatekeeper (not clang).
+Ship: dylib, framework, `.app`, or a Homebrew formula. Signing,
+notarization, and App Store rules for a Mac app are
+[os/macos](../../os/macos/README.md), not clang.
 
 Do **not** install into Debian `/usr`. Do **not** import MSVC.
 
@@ -307,7 +308,7 @@ macOS extra:
 
 - `xcode-select -p` / `xcrun --show-sdk-path`
 - Apple Silicon host for new binaries
-- `@rpath` sane; notarization extra if Gatekeeper matters
+- `@rpath` sane; Gatekeeper acceptance is [os/macos](../../os/macos/README.md)
 
 Windows extra:
 

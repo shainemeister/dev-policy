@@ -1,0 +1,375 @@
+# Official-source watch list for macOS dev-policy.
+#
+# Pins last verified: 2026-10-02.
+# Do not scrape these manuals into the packs. On DRIFT, patch the owning
+# pack with a bite-sized rule, then bump `pin` here.
+#
+# Developer documentation HTML is often a JavaScript shell. Those entries
+# watch the published `.md` body. Packs link the reader-facing page.
+#
+# Cadence:
+#   continuous  — developer news
+#   weekly      — review guidelines, notarization, packaging, sandbox
+#   major-os    — HIG, release notes
+#
+# split: os | application | both | meta
+# A Mac App Store rule must never land in direct-os-policy.md as if it
+# were a Developer ID requirement.
+
+schema_version: 1
+verified: "2026-10-02"
+
+packs:
+  - README.md
+  - direct-os-policy.md
+  - direct-application-policy.md
+  - app-store-os-policy.md
+  - app-store-application-policy.md
+
+sources:
+
+  # ------------------------------------------------------------------
+  # Train and news
+  # ------------------------------------------------------------------
+
+  - id: macos-27-release-notes
+    title: macOS 27 Golden Gate release notes
+    canonical_url: https://developer.apple.com/documentation/macos-release-notes/macos-27-release-notes.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+      - direct-application-policy.md
+      - README.md
+    split: os
+    pin_kind: regex
+    pin: "macOS 27 Golden Gate"
+    detect:
+      regex: 'macOS 27 Golden Gate'
+    cadence: major-os
+    notes: "Train rename or SDK move → Direct OS §1 and README pins. Menu-image note stays Direct Application §4."
+
+  - id: apple-developer-news-developer-id
+    title: Developer ID Sub-CA expiry (developer news)
+    canonical_url: https://developer.apple.com/news/
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+      - README.md
+    split: os
+    pin_kind: date
+    pin: "February 1, 2027"
+    detect:
+      regex: 'February 1, 2027'
+    cadence: continuous
+    notes: "Sub-CA date moves → Direct OS §2 and §13. Re-sign pkgs. Timestamped apps keep launching."
+
+  - id: apple-developer-news-rosetta
+    title: Rosetta transition (developer news)
+    canonical_url: https://developer.apple.com/news/
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+      - README.md
+    split: os
+    pin_kind: regex
+    pin: "Final release to support Rosetta"
+    detect:
+      regex: 'Final release to support Rosetta'
+    cadence: continuous
+    notes: "Rosetta end → Direct OS §1 ship host. Intel is not a second payload."
+
+  - id: apple-developer-news-full-disk-access
+    title: Full Disk Access controls (developer news)
+    canonical_url: https://developer.apple.com/news/
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+      - direct-application-policy.md
+    split: both
+    pin_kind: regex
+    pin: "Updates to Full Disk Access in macOS"
+    detect:
+      regex: 'Updates to Full Disk Access in macOS'
+    cadence: continuous
+    notes: "FDA tightening → Direct OS §10. Purpose strings stay Direct Application §8."
+
+  # ------------------------------------------------------------------
+  # Direct payload
+  # ------------------------------------------------------------------
+
+  - id: notarizing-macos
+    title: Notarizing macOS software before distribution
+    canonical_url: https://developer.apple.com/documentation/security/notarizing-macos-software-before-distribution.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+      - direct-application-policy.md
+    split: both
+    pin_kind: regex
+    pin: "Notarization of macOS software is not App Review"
+    detect:
+      regex: 'Notarization of macOS software is not App Review'
+    cadence: weekly
+    notes: "Notary requirements → Direct OS §5–8. Submit steps → Direct Application §11. Never App Store OS."
+
+  - id: notarization-workflow
+    title: Customizing the notarization workflow
+    canonical_url: https://developer.apple.com/documentation/security/customizing-the-notarization-workflow.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "notarytool"
+    detect:
+      regex: 'notarytool'
+    cadence: weekly
+    notes: "CLI queue changes → Direct Application §11. Not a store upload."
+
+  - id: notarization-issues
+    title: Resolving common notarization issues
+    canonical_url: https://developer.apple.com/documentation/security/resolving-common-notarization-issues.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "The signature of the binary is invalid"
+    detect:
+      regex: 'The signature of the binary is invalid'
+    cadence: weekly
+    notes: "New log lines → Direct Application §12 table."
+
+  - id: packaging-mac-software
+    title: Packaging Mac software for distribution
+    canonical_url: https://developer.apple.com/documentation/xcode/packaging-mac-software-for-distribution.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+      - app-store-os-policy.md
+    split: both
+    pin_kind: regex
+    pin: "only notarize the outermost container"
+    detect:
+      regex: 'only notarize the outermost container'
+    cadence: weekly
+    notes: "Container rules → Direct OS §12. Store installer identity → App Store OS §2. Do not cross the certificates."
+
+  - id: hardened-runtime
+    title: Hardened Runtime
+    canonical_url: https://developer.apple.com/documentation/security/hardened-runtime.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+      - direct-application-policy.md
+    split: both
+    pin_kind: regex
+    pin: "Hardened Runtime"
+    detect:
+      regex: 'Hardened Runtime'
+    cadence: weekly
+    notes: "Runtime exceptions → Application §7 declares, OS §6 enforces. Required for notarized targets."
+
+  - id: app-sandbox
+    title: Configuring the macOS App Sandbox
+    canonical_url: https://developer.apple.com/documentation/xcode/configuring-the-macos-app-sandbox.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+      - app-store-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "enforces at the kernel level"
+    detect:
+      regex: 'enforces at the kernel level'
+    cadence: weekly
+    notes: "Sandbox mechanism → both OS packs. Mandatory only on the Mac App Store payload."
+
+  - id: sandbox-file-access
+    title: Accessing files from the macOS App Sandbox
+    canonical_url: https://developer.apple.com/documentation/security/accessing-files-from-the-macos-app-sandbox.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+      - direct-application-policy.md
+    split: both
+    pin_kind: regex
+    pin: "sandbox container"
+    detect:
+      regex: 'sandbox container'
+    cadence: weekly
+    notes: "Container path → Direct OS §9. Bookmarks and panels → Direct Application §10."
+
+  - id: app-data-containers
+    title: Protecting local app data using containers
+    canonical_url: https://developer.apple.com/documentation/xcode/protecting-local-app-data-using-containers.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "System Integrity Protection"
+    detect:
+      regex: 'System Integrity Protection'
+    cadence: weekly
+    notes: "Group-container SIP → Direct OS §3. Not a Flatpak or FHS rule."
+
+  - id: smapp-service
+    title: SMAppService
+    canonical_url: https://developer.apple.com/documentation/servicemanagement/smappservice.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-os-policy.md
+      - app-store-os-policy.md
+    split: os
+    pin_kind: regex
+    pin: "SMAppService"
+    detect:
+      regex: 'SMAppService'
+    cadence: weekly
+    notes: "Helper registration → Direct OS §11. Store apps still need consent (App Store OS §5)."
+
+  # ------------------------------------------------------------------
+  # Application contents
+  # ------------------------------------------------------------------
+
+  - id: hig-designing-for-macos
+    title: Designing for macOS
+    canonical_url: https://developer.apple.com/design/human-interface-guidelines/designing-for-macos
+    git: null
+    watch_path: null
+    packs:
+      - direct-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "Designing for macOS | Apple Developer Documentation"
+    detect:
+      regex: 'Designing for macOS \| Apple Developer Documentation'
+    cadence: major-os
+    notes: "HTML title is the pin; the article body is client-rendered. Title change → Direct Application §3."
+
+  - id: hig-menus
+    title: Human Interface Guidelines — Menus
+    canonical_url: https://developer.apple.com/design/human-interface-guidelines/menus
+    git: null
+    watch_path: null
+    packs:
+      - direct-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "Menus | Apple Developer Documentation"
+    detect:
+      regex: 'Menus \| Apple Developer Documentation'
+    cadence: major-os
+    notes: "HTML title is the pin; the article body is client-rendered. Title change → Direct Application §4."
+
+  - id: hig-app-icons
+    title: Human Interface Guidelines — App icons
+    canonical_url: https://developer.apple.com/design/human-interface-guidelines/app-icons
+    git: null
+    watch_path: null
+    packs:
+      - direct-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "App icons | Apple Developer Documentation"
+    detect:
+      regex: 'App icons \| Apple Developer Documentation'
+    cadence: major-os
+    notes: "HTML title is the pin; the article body is client-rendered. Title change → Direct Application §5."
+
+  - id: information-property-list
+    title: Information Property List
+    canonical_url: https://developer.apple.com/documentation/bundleresources/information-property-list.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "CFBundleIdentifier"
+    detect:
+      regex: 'CFBundleIdentifier'
+    cadence: major-os
+    notes: "Identity keys → Direct Application §2 and §6. Install path stays the payload OS pack."
+
+  - id: entitlement-app-sandbox
+    title: App Sandbox entitlement
+    canonical_url: https://developer.apple.com/documentation/bundleresources/entitlements/com.apple.security.app-sandbox.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-application-policy.md
+      - app-store-os-policy.md
+    split: both
+    pin_kind: regex
+    pin: "com.apple.security.app-sandbox"
+    detect:
+      regex: 'com\.apple\.security\.app-sandbox'
+    cadence: weekly
+    notes: "Sandbox entitlement key → Direct Application declares it; App Store OS requires it. Direct payload stays optional."
+
+  - id: privacy-manifest
+    title: Privacy manifest files
+    canonical_url: https://developer.apple.com/documentation/bundleresources/privacy-manifest-files.md
+    git: null
+    watch_path: null
+    packs:
+      - direct-application-policy.md
+    split: application
+    pin_kind: regex
+    pin: "PrivacyInfo.xcprivacy"
+    detect:
+      regex: 'PrivacyInfo\.xcprivacy'
+    cadence: weekly
+    notes: "Manifest file → Direct Application §8. App Store Connect answers stay the store application pack."
+
+  # ------------------------------------------------------------------
+  # Mac App Store queue
+  # ------------------------------------------------------------------
+
+  - id: app-review-guidelines
+    title: App Review Guidelines
+    canonical_url: https://developer.apple.com/app-store/review/guidelines/
+    git: null
+    watch_path: null
+    packs:
+      - app-store-application-policy.md
+      - app-store-os-policy.md
+      - README.md
+    split: both
+    pin_kind: date
+    pin: "June 8, 2026"
+    detect:
+      regex: 'June 8, 2026'
+    cadence: weekly
+    notes: "Guidelines date → store packs. 2.4.5 system half is App Store OS. Product half and payments are App Store Application. Not Direct OS."
+
+  - id: app-store-connect
+    title: App Store Connect Help
+    canonical_url: https://developer.apple.com/help/app-store-connect/
+    git: null
+    watch_path: null
+    packs:
+      - app-store-application-policy.md
+      - app-store-os-policy.md
+    split: application
+    pin_kind: regex
+    pin: "App Store Connect"
+    detect:
+      regex: 'App Store Connect'
+    cadence: weekly
+    notes: "Metadata and upload help → store packs. Not the Developer ID notary queue."

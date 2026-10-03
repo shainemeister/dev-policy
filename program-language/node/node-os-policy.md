@@ -131,8 +131,9 @@ https://nodejs.org/en/download
 - Official pkg/binary from nodejs.org, or Homebrew `node@24`.
   Apple `/usr/bin` has no Node.
 - Ship host: Apple Silicon.
-- Signing/notarization extra for a bundled `.app` (packagers like
-  `pkg` / electron-builder still pass the Ecosystem trust bar).
+- A bundled `.app` (packagers such as `pkg` or electron-builder)
+  follows [os/macos](../../os/macos/README.md) for signing and
+  notarization. The packager still passes the Ecosystem trust bar.
 
 ------------------------------------------------------------------------
 WINDOWS CARVE-OUT — section 6

@@ -1,7 +1,7 @@
 # Official-source checker
 
 Watch lists: each family’s [`sources.yaml`](../os/linux/sources.yaml)
-(and the same filename under `program-language/*`).
+(and the same filename under `os/macos` and `program-language/*`).
 
 This checker **fetches official pages and compares pins**. It does **not**
 dump manuals into the policy packs. On `DRIFT`, patch the owning pack with
@@ -35,6 +35,7 @@ One family:
 
 ```bash
 python3 scripts/check_sources.py --offline --family os/linux
+python3 scripts/check_sources.py --offline --family os/macos
 python3 scripts/check_sources.py --offline --family program-language/rust
 ```
 

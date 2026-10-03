@@ -151,8 +151,9 @@ https://www.python.org/downloads/macos/
 - venv from the interpreter you mean (`/Library/Frameworks/...` or
   Homebrew).
 - Framework builds vs unix layout: document which.
-- Signing/notarization extra for a bundled `.app` (py2app/briefcase
-  extra — those bundlers still pass the Ecosystem trust bar).
+- A bundled `.app` (py2app, briefcase, or similar) follows
+  [os/macos](../../os/macos/README.md) for signing and notarization.
+  The bundler still passes the Ecosystem trust bar.
 
 Do not install wheels into `/usr`. Do not import MSVC.
 
